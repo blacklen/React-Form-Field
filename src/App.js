@@ -1,6 +1,7 @@
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Form from './components/Form.jsx';
+import { Button, Link, Stack } from '@shopify/polaris';
 
 function App() {
   console.log('App rendered');
@@ -52,17 +53,6 @@ function App() {
       type: 'check-box',
       label: 'ABC',
     },
-    {
-      id: 1,
-      type: 'text-field',
-      label: 'First Name',
-      autoComplete: 'off',
-      dependency: {
-        field_id: 6,
-        value: false,
-      },
-      isHalf: true,
-    },
   ]);
   const [formData, setFormData] = useState([]);
 
@@ -83,9 +73,57 @@ function App() {
     setFormData(dataFormat);
   }, [data])
 
+  const options = useMemo(() => {
+    const settings = {
+      change_variant: true,
+      change_quantity: true,
+      disable_remove: false,
+      haveOneVariant: false,
+    };
+
+    const layoutSettings = [
+      {
+        enable: settings.change_variant && !settings.haveOneVariant,
+        isFullWidth: true,
+        view: (<Button>Change variant</Button>)
+      },
+      {
+        enable: settings.change_quantity,
+        isFullWidth: true,
+        view: (<Button>Change quantity</Button>)
+      },
+      {
+        enable: !settings.disable_remove,
+        view: (<Button>Remove</Button>)
+      }
+    ];
+
+    const layout = layoutSettings.filter(l => l.enable).reduce((res, el) => {
+      if (!el.isFullWidth && res.length) {
+        res[res.length - 1].push(el);
+      } else {
+        res.push([el]);
+      }
+
+      return res;
+    }, []).map(items => {
+      const views = items.map(item => item.view);
+
+      return items.length > 1 ? (<Stack distribution='equalSpacing'> {views} </Stack>) : (views)
+    });
+
+    return layout.length ? (
+      <Stack vertical>
+        <Link> Change options </Link>
+        {layout}
+      </Stack>
+    ) : null;
+  }, []);
+
   return (
     <div className="App">
       <Form data={formData} />
+      { options }
     </div>
   );
 }
