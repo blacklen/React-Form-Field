@@ -2,6 +2,7 @@ import './App.css';
 import { useState, useEffect, useMemo } from 'react';
 import Form from './components/Form.jsx';
 import { Button, Link, Stack } from '@shopify/polaris';
+import CountDown from './components/CountDown';
 
 function App() {
   console.log('App rendered');
@@ -85,16 +86,16 @@ function App() {
       {
         enable: settings.change_variant && !settings.haveOneVariant,
         isFullWidth: true,
-        view: (<Button>Change variant</Button>)
+        view: (<Button key="variant">Change variant</Button>)
       },
       {
         enable: settings.change_quantity,
         isFullWidth: true,
-        view: (<Button>Change quantity</Button>)
+        view: (<Button key="quantity">Change quantity</Button>)
       },
       {
         enable: !settings.disable_remove,
-        view: (<Button>Remove</Button>)
+        view: (<Button key="remove">Remove</Button>)
       }
     ];
 
@@ -123,7 +124,8 @@ function App() {
   return (
     <div className="App">
       <Form data={formData} />
-      { options }
+      {options}
+      <CountDown duration={1/5} action="end" />
     </div>
   );
 }
