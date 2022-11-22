@@ -125,7 +125,7 @@ function App() {
     <div className="App">
       <Form data={formData} />
       {options}
-      <CountDown duration={1/5} action="end" />
+      <CountDown duration={1/5} />
     </div>
   );
 }

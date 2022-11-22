@@ -58,13 +58,9 @@ function CountDown({ duration, action = 'reset-time' }) {
     const expiredTime = +localStorage.getItem(localId) || 0;
     const remainingTime = expiredTime && expiredTime - Date.now();
 
-    if (remainingTime) {
-      if (remainingTime <= 0) {
-        doSomething();
-      } else {
-        setCounter(remainingTime);
-        start();
-      }
+    if (remainingTime && remainingTime > 0) {
+      setCounter(remainingTime);
+      start();
     } else {
       resetTime();
     }
